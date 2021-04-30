@@ -26,7 +26,13 @@ interface HomeProps {
 
 export default function Home() {
   return(
-    <h1>Hello Vivi</h1>
+    <>
+      <div className={commonStyles.contentContainer}>
+        <a href="#">Link</a>
+        <p>Vivi</p>
+      </div>
+
+    </>
   );
 
 // export const getStaticProps = async () => {
