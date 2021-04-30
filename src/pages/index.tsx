@@ -2,6 +2,7 @@ import { GetStaticProps } from 'next';
 
 import { getPrismicClient } from '../services/prismic';
 
+import Header from '../components/Header'
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
@@ -28,6 +29,7 @@ export default function Home() {
   return(
     <>
       <div className={commonStyles.contentContainer}>
+        <Header />
         <a href="#">Link</a>
         <p>Vivi</p>
       </div>
