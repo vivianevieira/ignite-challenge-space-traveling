@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import { getPrismicClient } from '../services/prismic';
 import Prismic from '@prismicio/client';
-import { RichText } from 'prismic-dom';
 
 import Header from '../components/Header'
 import commonStyles from '../styles/common.module.scss';
@@ -31,7 +30,7 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const { results } = postsPagination;
+  const { results, next_page } = postsPagination;
 
   console.log(postsPagination)
   return(
@@ -41,8 +40,8 @@ export default function Home({ postsPagination }: HomeProps) {
     </Head>
       <div className={commonStyles.contentContainer}>
         <Header />
-        <main>
-          <div>
+        <main className={styles.container}>
+          <div className={styles.posts}>
             {results.map(post => (
               <Link href={`/posts/${post.uid}`} key={post.uid}>
                 <a>
@@ -52,6 +51,16 @@ export default function Home({ postsPagination }: HomeProps) {
               </Link>
             ))}
           </div>
+          {
+          next_page
+            ? <div className={styles.loadMoreLink}>
+                <Link href="#">
+                  <a>Carregar mais posts</a>
+                </Link>
+              </div>
+            : null
+          }
+
         </main>
       </div>
     </>
