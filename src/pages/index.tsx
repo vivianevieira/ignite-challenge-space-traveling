@@ -1,5 +1,6 @@
-import Head from 'next/head';
+import { useEffect, useState } from 'react';
 import { GetStaticProps } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 
 import { getPrismicClient } from '../services/prismic';
@@ -30,9 +31,33 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
+  const [posts, setPosts] = useState<Post[]>([]);
+
   const { results, next_page } = postsPagination;
 
-  console.log(postsPagination)
+  async function handleMorePostsLink() {
+    const response = await fetch(next_page);
+    const data = await response.json();
+
+    const newPosts = data.results.map(post => {
+    return {
+      uid: post.uid,
+      first_publication_date: post.first_publication_date,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author
+      }
+    }
+  })
+
+  setPosts(oldState => [...oldState.concat(newPosts)])
+  }
+
+  useEffect(() => {
+    setPosts(results)
+  }, []);
+
   return(
     <>
     <Head>
@@ -42,7 +67,7 @@ export default function Home({ postsPagination }: HomeProps) {
         <Header />
         <main className={styles.container}>
           <div className={styles.posts}>
-            {results.map(post => (
+            {posts.map(post => (
               <Link href={`/posts/${post.uid}`} key={post.uid}>
                 <a>
                   <strong>{post.data.title}</strong>
@@ -55,12 +80,11 @@ export default function Home({ postsPagination }: HomeProps) {
           next_page
             ? <div className={styles.loadMoreLink}>
                 <Link href="#">
-                  <a>Carregar mais posts</a>
+                  <a onClick={handleMorePostsLink}>Carregar mais posts</a>
                 </Link>
               </div>
             : null
           }
-
         </main>
       </div>
     </>
