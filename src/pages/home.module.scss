@@ -1,1 +1,50 @@
-// TODO
+.container {
+  padding: 0 2rem;
+}
+
+.posts {
+  margin: 5rem auto 0;
+
+  a {
+    display: block;
+
+    & + a {
+      margin-top: 2rem;
+      padding-top: 2rem;
+    }
+
+    strong {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--text-heading);
+      margin-top: 1rem;
+      line-height: 2rem;
+      transition: filter 0.2s;
+    }
+
+    p {
+      color: var(--text-body);
+      margin-top: 0.5rem;
+      line-height: 1.625rem;
+    }
+
+    &:hover strong {
+      filter: brightness(0.9);
+    }
+  }
+}
+
+.loadMoreLink {
+  margin-top: 2rem;
+  padding-top: 2rem;
+
+  a {
+    color: var(--highlight);
+    font-weight: 600;
+    transition: filter 0.2s;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}
