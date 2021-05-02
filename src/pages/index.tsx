@@ -5,6 +5,9 @@ import Link from 'next/link';
 
 import { getPrismicClient } from '../services/prismic';
 import Prismic from '@prismicio/client';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { FiCalendar, FiUser } from 'react-icons/fi';
 
 import Header from '../components/Header'
 import commonStyles from '../styles/common.module.scss';
@@ -42,7 +45,7 @@ export default function Home({ postsPagination }: HomeProps) {
     const newPosts = data.results.map(post => {
     return {
       uid: post.uid,
-      first_publication_date: post.first_publication_date,
+      first_publication_date: new Date(post.first_publication_date),
       data: {
         title: post.data.title,
         subtitle: post.data.subtitle,
@@ -69,11 +72,23 @@ export default function Home({ postsPagination }: HomeProps) {
           <div className={styles.posts}>
             {posts.map(post => (
               <Link href={`/posts/${post.uid}`} key={post.uid}>
-                <a>
-                  <strong>{post.data.title}</strong>
+                  <a>
+                    <strong>{post.data.title}</strong>
                   <p>{post.data.subtitle}</p>
-                </a>
+                  <div className={styles.icons}>
+                    <p>
+                      <span><FiCalendar /></span>
+                      {format(new Date(new Date(post.first_publication_date)),
+                      'dd MMM yyyy', {locale: ptBR})}
+                    </p>
+                    <p>
+                      <span className={styles.iconLeftMargin}><FiUser /></span>
+                      {post.data.author}
+                    </p>
+                  </div>
+                  </a>
               </Link>
+
             ))}
           </div>
           {
