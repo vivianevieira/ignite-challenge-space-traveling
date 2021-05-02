@@ -3,14 +3,13 @@
 }
 
 .posts {
-  margin: 5rem auto 0;
+  margin: 3rem auto 0;
 
   a {
     display: block;
 
     & + a {
-      margin-top: 2rem;
-      padding-top: 2rem;
+      margin-top: 3rem;
     }
 
     strong {
@@ -22,14 +21,28 @@
       transition: filter 0.2s;
     }
 
-    p {
-      color: var(--text-body);
-      margin-top: 0.5rem;
-      line-height: 1.625rem;
-    }
-
     &:hover strong {
       filter: brightness(0.9);
+    }
+  }
+  p {
+    color: var(--text-body);
+    margin-top: 0.5rem;
+    line-height: 1.625rem;
+  }
+
+  .icons {
+    display: flex;
+    font-size: 0.8rem;
+
+    span {
+      margin-right: 0.5rem;
+    }
+
+    p {
+      & + p {
+        margin-left:1rem;
+      }
     }
   }
 }
