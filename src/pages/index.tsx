@@ -10,7 +10,6 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 
 import Header from '../components/Header'
-import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
 
@@ -34,12 +33,10 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostPagination>(postsPagination);
 
-  const { results, next_page } = postsPagination;
-
-  async function handleMorePostsLink() {
-    const response = await fetch(next_page);
+  async function handleMorePostsLink(url: string) {
+    const response = await fetch(url);
     const data = await response.json();
 
     const newPosts = data.results.map(post => {
@@ -54,11 +51,15 @@ export default function Home({ postsPagination }: HomeProps) {
     }
   })
 
-  setPosts(oldState => [...oldState.concat(newPosts)])
+  setPosts({
+    next_page: data.next_page,
+    results: [...posts.results, ...newPosts]
+  })
+
   }
 
   useEffect(() => {
-    setPosts(results)
+    setPosts(postsPagination)
   }, []);
 
   return(
@@ -66,11 +67,11 @@ export default function Home({ postsPagination }: HomeProps) {
     <Head>
       <title>Home | spacetravelling</title>
     </Head>
-      <div className={commonStyles.contentContainer}>
+      <div>
         <Header />
         <main className={styles.container}>
           <div className={styles.posts}>
-            {posts.map(post => (
+            {posts.results.map(post => (
               <Link href={`/post/${post.uid}`} key={post.uid}>
                   <a>
                     <strong>{post.data.title}</strong>
@@ -90,16 +91,16 @@ export default function Home({ postsPagination }: HomeProps) {
               </Link>
 
             ))}
-          </div>
           {
-          next_page
+          posts.next_page
             ? <div className={styles.loadMoreLink}>
                 <Link href="#">
-                  <a onClick={handleMorePostsLink}>Carregar mais posts</a>
+                  <a onClick={() => handleMorePostsLink(posts.next_page)}>Carregar mais posts</a>
                 </Link>
               </div>
             : null
           }
+          </div>
         </main>
       </div>
     </>
@@ -113,7 +114,7 @@ export const getStaticProps: GetStaticProps = async () => {
     Prismic.Predicates.at('document.type', 'posts')
   ], {
     fetch: ['posts.title', 'posts.subtitle', 'posts.author'],
-    pageSize: 5
+    pageSize: 2
   })
 
   const next_page = postsResponse.next_page;
