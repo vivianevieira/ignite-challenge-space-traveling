@@ -3,3 +3,19 @@
   margin: 0 auto;
   padding: 0 2rem;
 }
+
+  .icons {
+    display: flex;
+    font-size: 0.8rem;
+    margin-top: 1.5rem;
+
+    span {
+      margin-right: 0.5rem;
+    }
+
+    p {
+      &+p {
+        margin-left: 1rem;
+      }
+    }
+  }
