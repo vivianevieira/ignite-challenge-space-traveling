@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { getPrismicClient } from '../../services/prismic';
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
-// import { RichText } from 'prismic-reactjs';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
@@ -74,7 +73,17 @@ export default function Post({ post }: PostProps) {
               </p>
               <p>
                 <span><FiClock /></span>
-                4 min
+                {Math.ceil(
+                post.data.content.reduce((totalContent, item) => {
+                  return (
+                    totalContent +
+                    item.body.reduce((total, paragraph) => {
+                      return total + paragraph.text.split(' ').length;
+                    }, 0)
+                  );
+                }, 0) / 200
+              )}{' '}
+              min
               </p>
             </div>
             { post.data.content.map(content => (
@@ -85,8 +94,6 @@ export default function Post({ post }: PostProps) {
                 />
               </div>
             ))}
-
-
           </article>
         </main>
       )}
