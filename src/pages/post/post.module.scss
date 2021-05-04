@@ -23,4 +23,30 @@
     font-weight: 700;
     color: var(--text-heading)
   }
+
+  .postContent {
+    margin-top: 2rem;
+    line-height: 2rem;
+    font-size: 1.125rem;
+
+    h2, p, ul {
+      margin: 1.5rem 0;
+    }
+
+    h2 {
+      color: var(--text-heading);
+    }
+
+    p {
+      color: var(--text-body);
+    }
+
+    ul, ol {
+      padding-left: 1.5rem;
+
+      li {
+        margin: 0.5rem 0
+      }
+    }
+  }
 }

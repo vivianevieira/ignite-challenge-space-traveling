@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { getPrismicClient } from '../../services/prismic';
 import Prismic from '@prismicio/client';
 import { RichText } from 'prismic-dom';
+// import { RichText } from 'prismic-reactjs';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
@@ -76,6 +77,14 @@ export default function Post({ post }: PostProps) {
                 4 min
               </p>
             </div>
+            { post.data.content.map(content => (
+              <div className={styles.postContent} key={`${content.heading}, ${Date.now()}`}>
+                <h2>{content.heading}</h2>
+                <div
+                  dangerouslySetInnerHTML={{ __html: RichText.asHtml(content.body)}}
+                />
+              </div>
+            ))}
 
 
           </article>
@@ -115,7 +124,7 @@ export const getStaticProps = async ({ params }) => {
         url: response.data.banner.url
       },
       author: response.data.author,
-      content: [response.data.content],
+      content: response.data.content
     }
   }
 
