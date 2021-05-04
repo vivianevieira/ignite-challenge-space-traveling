@@ -5,6 +5,10 @@ import { useRouter } from 'next/router';
 
 import { getPrismicClient } from '../../services/prismic';
 import Prismic from '@prismicio/client';
+import { RichText } from 'prismic-dom';
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
+import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 
 import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
@@ -31,22 +35,57 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
+  console.log(post)
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Loading...</div>
+  }
 
   return (
     <>
-      <Head>
-        <title>Post title | spacetravelling</title>
-      </Head>
       <div className={commonStyles.contentContainer}>
+        <Head>
+          <title>
+            {post.data.title} | Spacetravelling
+          </title>
+        </Head>
         <Header />
       </div>
+      {router.isFallback ? (
+        <div>Loading...</div>
+      ) : (
+        <main>
+          <div className={styles.banner}>
+            <img src={post.data.banner.url} alt="banner" />
+          </div>
+          <article className={styles.post}>
+            <h1>{post.data.title}</h1>
+            <div className={commonStyles.icons}>
+              <p>
+                <span><FiCalendar /></span>
+                {format(new Date(new Date(post.first_publication_date)),
+                'dd MMM yyyy', {locale: ptBR})}
+              </p>
+              <p>
+                <span><FiUser /></span>
+                {post.data.author}
+              </p>
+              <p>
+                <span><FiClock /></span>
+                4 min
+              </p>
+            </div>
 
+
+          </article>
+        </main>
+      )}
     </>
-
   );
 }
 
-export const getStaticPaths = async () => {
+export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient();
 
   const posts = await prismic.query([
@@ -56,7 +95,7 @@ export const getStaticPaths = async () => {
   });
 
   return {
-    paths: [{ params: { slug: '1' } }, { params: { slug: '2' } }],
+    paths: [{ params: { slug: 'the-jamstack-in-2021' } }, { params: { slug: 'incrementally-adopting-next.js' } }],
     fallback: true
   }
 };
@@ -66,22 +105,18 @@ export const getStaticProps = async ({ params }) => {
 
   const prismic = getPrismicClient();
   const response = await prismic.getByUID('posts', String(slug), {});
+  console.log(response.data.content)
 
   const post = {
     first_publication_date: response.first_publication_date,
-  data: {
-    title: response.data.title,
-    banner: {
-      url: response.data
-    },
-    author: response.data.author,
-    content: {
-      heading: string;
-      body: {
-        text: string;
+    data: {
+      title: response.data.title,
+      banner: {
+        url: response.data.banner.url
       },
-    },
-  }
+      author: response.data.author,
+      content: [response.data.content],
+    }
   }
 
   return {

@@ -1,1 +1,26 @@
-// TODO
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.banner {
+  display: flex;
+  justify-content: center;
+
+  image {
+    max-width: 600px;
+  }
+
+}
+
+.post {
+  max-width: 720px;
+  margin: 5rem auto 0;
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-heading)
+  }
+}
