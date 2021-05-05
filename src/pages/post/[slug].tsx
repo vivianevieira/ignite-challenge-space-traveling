@@ -35,11 +35,10 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  console.log(post)
   const router = useRouter();
 
   if (router.isFallback) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
   }
 
   return (
@@ -52,9 +51,6 @@ export default function Post({ post }: PostProps) {
         </Head>
         <Header />
       </div>
-      {router.isFallback ? (
-        <div>Loading...</div>
-      ) : (
         <main>
           <div className={styles.banner}>
             <img src={post.data.banner.url} alt="banner" />
@@ -96,7 +92,6 @@ export default function Post({ post }: PostProps) {
             ))}
           </article>
         </main>
-      )}
     </>
   );
 }
@@ -106,17 +101,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
   const posts = await prismic.query([
     Prismic.Predicates.at('document.type', 'posts')
-  ], {
-    fetch: ['posts.title', 'posts.subtitle', 'posts.author']
-  });
+  ]);
 
   return {
-    paths: [{ params: { slug: 'the-jamstack-in-2021' } }, { params: { slug: 'incrementally-adopting-next.js' } }],
+    paths: posts.results.map(post => {
+      return {
+        params: { slug: post.uid }
+      };
+    }),
     fallback: true
   }
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params;
 
   const prismic = getPrismicClient();

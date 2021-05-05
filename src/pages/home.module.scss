@@ -1,9 +1,12 @@
 .container {
-  padding: 0 2rem;
+  max-width: 1120px;
+  margin: 0 auto;
 }
 
 .posts {
+  max-width: 720px;
   margin: 3rem auto 0;
+  padding: 0 2rem;
 
   a {
     display: block;
