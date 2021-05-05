@@ -38,7 +38,7 @@ export default function Post({ post }: PostProps) {
   const router = useRouter();
 
   if (router.isFallback) {
-    return <div>Loading...</div>
+    return <div>Carregando...</div>
   }
 
   return (
