@@ -18,6 +18,7 @@ interface Post {
   first_publication_date: string | null;
   data: {
     title: string;
+    subtitle: string;
     banner: {
       url: string;
     };
@@ -125,6 +126,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     first_publication_date: response.first_publication_date,
     data: {
       title: response.data.title,
+      subtitle: response.data.subtitle,
       banner: {
         url: response.data.banner.url
       },
